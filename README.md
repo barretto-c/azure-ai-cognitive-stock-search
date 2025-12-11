@@ -23,11 +23,17 @@ pip install -r requirements.txt
 pip install python-dotenv requests
 ```
 
+
 ### 3. Provision Azure Search Service
-- Create your Azure Cognitive Search service:
+- This solution works on the Free (F1) tier:
    ```bash
    az search service create --name <your_resource_name> --resource-group <your_resource_group> --sku free --location eastus
    ```
+- If you need semantic search, you must use S1 or a higher tier (not available on Free). This comes with a higher cost (typically $100+/month). Example for S1:
+   ```bash
+   az search service create --name <your_resource_name> --resource-group <your_resource_group> --sku standard --location eastus
+   ```
+   See the Azure pricing page for details.
 
 ### 4. Configure Credentials
 - In the Azure portal or via CLI, find your:
