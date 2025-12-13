@@ -3,60 +3,39 @@ from azure.search.documents import SearchClient
 
 import os
 from dotenv import load_dotenv
+from textblob import TextBlob
 
-# Load environment variables from .env file
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.dirname(__file__)), '.env'))
 
+# Load static data with recent news headlines for each stock
+import json
+static_data_path = os.path.join(os.path.dirname(__file__), "static_stock_data.json")
+with open(static_data_path, "r", encoding="utf-8") as f:
+    docs = json.load(f)
+
+
+# For each stock, keep only 'news' (string) and compute/store 'newsSentiment' (double)
+for doc in docs:
+    # If 'news' is not present, use the first item from 'recentNews' if available
+    news = doc.get('news')
+    if not news:
+        recent_news = doc.get('recentNews')
+        if recent_news and isinstance(recent_news, list) and len(recent_news) > 0:
+            news = recent_news[0]
+        else:
+            news = ''
+    doc['news'] = news
+    # Compute sentiment for the news string
+    doc['newsSentiment'] = round(TextBlob(news).sentiment.polarity, 3) if news else None
+    # Remove any other news/recentNews fields
+    doc.pop('recentNews', None)
+    doc.pop('recentNewsSentiments', None)
 endpoint = os.getenv("SEARCH_ENDPOINT")
 key = os.getenv("SEARCH_ADMIN_KEY")
 index_name = os.getenv("INDEX_NAME", "stocks")
 
 search_client = SearchClient(endpoint, index_name, AzureKeyCredential(key))
 
-docs = [
-    {
-        "ticker": "AAPL",
-        "company": "Apple Inc.",
-        "sector": "Technology",
-        "description": "Consumer electronics, iPhones, Macs, services, and AI investments",
-        "marketCap": 3200000000000
-    },
-    {
-        "ticker": "NVDA",
-        "company": "NVIDIA Corporation",
-        "sector": "Semiconductors",
-        "description": "GPUs, AI accelerators, data center compute, and autonomous systems",
-        "marketCap": 2500000000000
-    },
-    {
-        "ticker": "TSLA",
-        "company": "Tesla Inc.",
-        "sector": "Automotive",
-        "description": "Electric vehicles, robotics, and autonomous driving",
-        "marketCap": 800000000000
-    },
-    {
-        "ticker": "MSFT",
-        "company": "Microsoft Corporation",
-        "sector": "Technology",
-        "description": "Cloud computing, enterprise software, and AI platforms",
-        "marketCap": 3100000000000
-    },
-    {
-        "ticker": "AMBY",
-        "company": "Amighty By",
-        "sector": "Fictional",
-        "description": "Innovative AI-driven solutions and fictional stock for demo purposes",
-        "marketCap": 1234567890
-    },
-    {
-        "ticker": "OAI",
-        "company": "OpenAI",
-        "sector": "Artificial Intelligence",
-        "description": "AI research, language models, and generative AI technologies",
-        "marketCap": 500000000000
-    },
-]
 
 result = search_client.upload_documents(docs)
 print("Upload results:")

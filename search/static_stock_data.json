@@ -1,0 +1,26 @@
+[
+    {
+        "ticker": "AAPL",
+        "company": "Apple Inc.",
+        "sector": "Technology",
+        "description": "Consumer electronics, iPhones, Macs, services, and AI investments",
+        "marketCap": 3200000000000,
+        "news": "Apple launches new AI chip, analysts are optimistic."
+    },
+    {
+        "ticker": "MSFT",
+        "company": "Microsoft Corporation",
+        "sector": "Technology",
+        "description": "Software, cloud computing, and AI research.",
+        "marketCap": 2800000000000,
+        "news": "Microsoft's Azure AI services see record adoption in Q4."
+    },
+    {
+        "ticker": "GOOGL",
+        "company": "Alphabet Inc.",
+        "sector": "Communication Services",
+        "description": "Search, advertising, cloud, and AI innovation.",
+        "marketCap": 1800000000000,
+        "news": "Alphabet invests heavily in generative AI startups."
+    }
+]

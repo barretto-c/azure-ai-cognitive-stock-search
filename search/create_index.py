@@ -25,7 +25,9 @@ index_definition = {
         {"name": "company", "type": "Edm.String", "searchable": True},
         {"name": "sector", "type": "Edm.String", "searchable": True},
         {"name": "description", "type": "Edm.String", "searchable": True},
-        {"name": "marketCap", "type": "Edm.Int64"}
+        {"name": "marketCap", "type": "Edm.Int64"},
+        {"name": "news", "type": "Edm.String", "searchable": True, "retrievable": True},
+        {"name": "newsSentiment", "type": "Edm.Double", "retrievable": True}
     ],
     "semantic": {
         "configurations": [
